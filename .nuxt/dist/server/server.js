@@ -1259,7 +1259,7 @@ async function setContext(app, context) {
   // If context not defined, create it
   if (!app.context) {
     app.context = {
-      isStatic: false,
+      isStatic: true,
       isDev: false,
       isHMR: false,
       app,
@@ -1270,12 +1270,6 @@ async function setContext(app, context) {
     };
     // Only set once
 
-    if (context.req) {
-      app.context.req = context.req;
-    }
-    if (context.res) {
-      app.context.res = context.res;
-    }
     if (context.ssrContext) {
       app.context.ssrContext = context.ssrContext;
     }
@@ -2352,6 +2346,14 @@ const layouts = {
   },
   async mounted() {
     this.$loading = this.$refs.loading;
+    if (this.isPreview) {
+      if (this.$store && this.$store._actions.nuxtServerInit) {
+        this.$loading.start();
+        await this.$store.dispatch('nuxtServerInit', this.context);
+      }
+      await this.refresh();
+      this.$loading.finish();
+    }
   },
   watch: {
     'nuxt.err': 'errorChanged'
@@ -2362,6 +2364,9 @@ const layouts = {
     },
     isFetching() {
       return this.nbFetching > 0;
+    },
+    isPreview() {
+      return Boolean(this.$options.previewData);
     }
   },
   methods: {
@@ -2441,6 +2446,49 @@ const layouts = {
         layout = 'default';
       }
       return Promise.resolve(layouts['_' + layout]);
+    },
+    getRouterBase() {
+      return Object(external_ufo_["withoutTrailingSlash"])(this.$router.options.base);
+    },
+    getRoutePath(route = '/') {
+      const base = this.getRouterBase();
+      return Object(external_ufo_["withoutTrailingSlash"])(Object(external_ufo_["withoutBase"])(Object(external_ufo_["parsePath"])(route).pathname, base));
+    },
+    getStaticAssetsPath(route = '/') {
+      const {
+        staticAssetsBase
+      } = window.__NUXT__;
+      return urlJoin(staticAssetsBase, this.getRoutePath(route));
+    },
+    async fetchStaticManifest() {
+      return window.__NUXT_IMPORT__('manifest.js', Object(external_ufo_["normalizeURL"])(urlJoin(this.getStaticAssetsPath(), 'manifest.js')));
+    },
+    setPagePayload(payload) {
+      this._pagePayload = payload;
+      this._fetchCounters = {};
+    },
+    async fetchPayload(route, prefetch) {
+      const path = Object(external_ufo_["decode"])(this.getRoutePath(route));
+      const manifest = await this.fetchStaticManifest();
+      if (!manifest.routes.includes(path)) {
+        if (!prefetch) {
+          this.setPagePayload(false);
+        }
+        throw new Error(`Route ${path} is not pre-rendered`);
+      }
+      const src = urlJoin(this.getStaticAssetsPath(route), 'payload.js');
+      try {
+        const payload = await window.__NUXT_IMPORT__(path, Object(external_ufo_["normalizeURL"])(src));
+        if (!prefetch) {
+          this.setPagePayload(payload);
+        }
+        return payload;
+      } catch (err) {
+        if (!prefetch) {
+          this.setPagePayload(false);
+        }
+        throw err;
+      }
     }
   },
   components: {
@@ -2600,10 +2648,7 @@ var external_prismic_dom_default = /*#__PURE__*/__webpack_require__.n(external_p
   // Load prismic script after Nuxt app is mounted
   if (false) {}
   // Preview mode
-  if ( true && route.path === '/preview') {
-    // Server side
-    await prismic.preview();
-  }
+  if (false) {}
   if (false) {}
 });
 // EXTERNAL MODULE: ./node_modules/@prismicio/vue/components/common.js
@@ -2959,6 +3004,10 @@ const createNext = ssrContext => opts => {
   ssrContext.fetchCounters = {};
 
   // Remove query from url is static target
+
+  if (ssrContext.url) {
+    ssrContext.url = ssrContext.url.split('?')[0];
+  }
 
   // Public runtime config
   ssrContext.nuxt.config = ssrContext.runtimeConfig.public;

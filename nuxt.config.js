@@ -45,5 +45,5 @@ export default {
   build: {
     transpile: ["@prismicio/vue"],
   },
-  buildDir: 'dist',
+  target: 'static',
 };

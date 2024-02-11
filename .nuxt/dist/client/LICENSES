@@ -1,4 +1,12 @@
 /*!
+ * statuses
+ * Copyright(c) 2014 Jonathan Ong
+ * Copyright(c) 2016 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+
+
+/*!
  * Vue.js v2.7.16
  * (c) 2014-2023 Evan You
  * Released under the MIT License.
@@ -39,11 +47,3 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
-
-
-/*!
- * statuses
- * Copyright(c) 2014 Jonathan Ong
- * Copyright(c) 2016 Douglas Christopher Wilson
- * MIT Licensed
- */
