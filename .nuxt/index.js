@@ -12,9 +12,9 @@ import { setContext, getLocation, getRouteData, normalizeError } from './utils'
 
 /* Plugins */
 
-import nuxt_plugin_plugin_c2cb6fe8 from 'nuxt_plugin_plugin_c2cb6fe8' // Source: .\\components\\plugin.js (mode: 'all')
-import nuxt_plugin_prismic_472d97f2 from 'nuxt_plugin_prismic_472d97f2' // Source: .\\prismic\\plugins\\prismic.js (mode: 'all')
-import nuxt_plugin_prismiccomponents_10416404 from 'nuxt_plugin_prismiccomponents_10416404' // Source: .\\prismic\\plugins\\prismic-components.js (mode: 'all')
+import nuxt_plugin_plugin_065111bd from 'nuxt_plugin_plugin_065111bd' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_prismic_7b5434f8 from 'nuxt_plugin_prismic_7b5434f8' // Source: .\\prismic\\plugins\\prismic.js (mode: 'all')
+import nuxt_plugin_prismiccomponents_8299db1a from 'nuxt_plugin_prismiccomponents_8299db1a' // Source: .\\prismic\\plugins\\prismic-components.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -180,16 +180,16 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_plugin_c2cb6fe8 === 'function') {
-    await nuxt_plugin_plugin_c2cb6fe8(app.context, inject)
+  if (typeof nuxt_plugin_plugin_065111bd === 'function') {
+    await nuxt_plugin_plugin_065111bd(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_prismic_472d97f2 === 'function') {
-    await nuxt_plugin_prismic_472d97f2(app.context, inject)
+  if (typeof nuxt_plugin_prismic_7b5434f8 === 'function') {
+    await nuxt_plugin_prismic_7b5434f8(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_prismiccomponents_10416404 === 'function') {
-    await nuxt_plugin_prismiccomponents_10416404(app.context, inject)
+  if (typeof nuxt_plugin_prismiccomponents_8299db1a === 'function') {
+    await nuxt_plugin_prismiccomponents_8299db1a(app.context, inject)
   }
 
   // Lock enablePreview in context
